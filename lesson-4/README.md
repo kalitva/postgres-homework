@@ -49,6 +49,7 @@ insert into students values (2, 'petya');
 \q
 exit
 
+sudo apt install postgresql-client
 psql -h localhost -U postgres
 ```
 
