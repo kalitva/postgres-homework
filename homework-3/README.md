@@ -70,7 +70,7 @@
 
 - попытайтесь запустить кластер
     ```shell
-    box@ubuntu:~$ sudo -u postgres pg_ctlcluster 15 main stop
+    box@ubuntu:~$ sudo -u postgres pg_ctlcluster 15 main start
     Error: /var/lib/postgresql/15/main is not accessible or does not exist
     ```
 
@@ -93,7 +93,7 @@
 
 - попытайтесь запустить кластер
     ```shell
-    sudo systemctl start postgresql@15-main
+    sudo -u postgres pg_ctlcluster 15 main start
     ```
 
 - напишите получилось или нет и почему
