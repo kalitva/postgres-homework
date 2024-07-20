@@ -58,7 +58,7 @@
         ```
     - Появились новые блокировки. Добавилась исключительная блокировка на айди транзакции так как
     начались изменяться данные, этот айди глобальный, то есть актуален для всех процессов. Также
-    добавились две блокировки RowExclusive - для строки таблицы и индекса
+    добавились две блокировки RowExclusive - для строки таблицы и индекса (`primary key`)
         ```sql
         postgres=# select * from pg_locks where pid = 432556;                                                                                                                                                                
            locktype    | database | relation | page | tuple | virtualxid | transactionid | classid | objid | objsubid | virtualtransaction |  pid   |       mode       | granted | fastpath |           waitstart            
@@ -77,7 +77,7 @@
         ```
     - В этой сессии появились такие же 4 блокировки как и для предыдущей. Кроме этого процесс 
     пытается захватить транзакцию из предыдущей сессии (`granted = false`) в режиме Shared, ожидая 
-    освобождения ресурса. Также захвачена блокировка tuple текущей версии строки в режиме Exclusive
+    освобождения ресурса. Также захвачена блокировка tuple версии строки в режиме Exclusive
         ```sql
         postgres=# select * from pg_locks where pid = 432556;                                                                                                                                                                
            locktype    | database | relation | page | tuple | virtualxid | transactionid | classid | objid | objsubid | virtualtransaction |  pid   |       mode       | granted | fastpath |           waitstart            
