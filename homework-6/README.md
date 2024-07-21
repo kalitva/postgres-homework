@@ -81,10 +81,38 @@
 - Создайте новый кластер с включенной контрольной суммой страниц. Создайте таблицу. Вставьте
 несколько значений. Выключите кластер. Измените пару байт в таблице. Включите кластер и сделайте
 выборку из таблицы. Что и почему произошло? как проигнорировать ошибку и продолжить работу?
-    ```
-    При попытке сделать select из поврежденной таблицы бд выдает ошибку
-    ERROR:  invalid page in block 0 of relation base/5/16384
-    Можно проигнорировать ошибку, установив параметр zero_damaged_pages:
-    set zero_damaged_pages to 'on'
-    ```
-
+    - Создадим новый кластер и запустим его
+        ```shell
+        sudo pg_createcluster 15 checksums -- --data-checksums
+        sudo pg_ctlcluster 15 checksums start
+        ```
+    - Создадим таблицу и вставим данные
+        ```sql
+        create table t (c int);
+        insert into t values (1), (2), (3), (4), (5);
+        ```
+    - Посмотрим путь файла созданной таблицы
+        ```sql
+        postgres=# select pg_relation_filepath('t');
+         pg_relation_filepath
+        ----------------------
+         base/5/16388
+        (1 row)
+        ```
+    - Остановим кластер, откроем файл и отредактируем пару байтов
+        ```shell
+        sudo pg_ctlcluster 15 checksums stop
+        sudo -i -u postgres
+        vi /var/lib/postgresql/15/checksums/base/5/16388
+        ...
+        ```
+    - Запустим кластер и сделаем запрос, постгрес выдает сообщение об ошибке
+        ```sql
+        postgres=# select * from t;
+        WARNING:  page verification failed, calculated checksum 30611 but expected 61872
+        ERROR:  invalid page in block 0 of relation base/5/16388
+        ```
+    - Чтобы проигнорировать ошибку, нужно установить параметр `set ignore_checksum_failure to on`,
+     в таком случае бд выдаст предупреждение. Так делать рекоммендуется только в целях дебага, 
+     иначе может привести к непредсказуемым ошибкам (хоть и в моем случае селект выдал правильные
+     данные)  
