@@ -5,7 +5,7 @@
         ```shell
          sudo pg_ctlcluster 15 main start
         ```
-    - И запустил `pg_bench` для сравнения
+    - И запустил `pg_bench` для сравнения далее
         ```shell
         sudo -i -u postgres
         pgbench -i postgres
