@@ -10,6 +10,7 @@ create table songs (
     lyrics tsvector
 );
 ```
+<br />
 
 - Создать индекс к какой-либо из таблиц вашей БД
     ```sql
@@ -50,6 +51,7 @@ create table songs (
              Index Cond: (lyrics @@ to_tsquery('lorem'::text))
     (4 rows)
     ```
+    <br />
 
 - Реализовать индекс на часть таблицы или индекс на поле с функцией
     ```sql
@@ -66,6 +68,8 @@ create table songs (
              Index Cond: (lower((genre)::text) = 'rock'::text)
     (4 rows)
     ```
+    </br>
+
 - Создать индекс на несколько полей
     ```sql
     create index idx_songs_name_artist on songs (name, artist);
